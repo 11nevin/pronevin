@@ -1,0 +1,49 @@
+{% extends 'userindex.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css">
+
+<header class="masthead">
+    <div class="container px-4 px-lg-5 d-flex h-100 align-items-center justify-content-center">
+        <div class="justify-content-center w-50">
+            <div class="container container-fluid mb-5 text-center">
+                <h3 style="color: white;text-transform: uppercase;font-weight: bolder;">Audio Summarizer</h3>
+    
+            </div>
+            <form method="post" enctype="multipart/form-data" >
+                {% csrf_token %}
+                
+                <div class="row mt-5">
+                    <div class="col col-12 "><input type="file" name="video" placeholder="Choose Video" class="form-control" required></div>
+                </div>
+
+               
+                <div class="row mt-5">
+                    <div class="col col-12">
+                        <button class="btn btn-primary w-100" >Generate Summary <i class="bi bi-stars"></i></button>
+                    </div>
+    
+                </div>
+    
+    
+            </form>
+        </div>
+        
+    </div>
+</header>
+<section class="about-section text-center" id="about">
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-lg-8" style="margin-bottom: 200px;">
+                <h2 class="text-white mb-4">Summary</h2>
+                <textarea class="form-control custom-textarea" id="autoResizeTextarea" style="height: 250px;text-align: justify;align-content: center;">{{ summary }}</textarea>
+                <a class="btn btn-primary mt-5" href="/user_feedback">Give a Feedback</a>
+            </div>
+        </div>
+ 
+        
+    </div>
+</section>
+
+{% endblock %}

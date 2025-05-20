@@ -1,0 +1,102 @@
+{% extends 'adminindex.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css">
+
+<header class="masthead">
+    <div class="container px-4 px-lg-5 d-flex h-100 align-items-center justify-content-center">
+        <div class="justify-content-center w-50">
+            <div class="container container-fluid mb-5 text-center">
+                <h3 style="color: white;text-transform: uppercase;font-weight: bolder;">Users List</h3>
+    
+            </div>
+            <form method="post" >
+                {% csrf_token %}
+                
+                <div class="row mt-5">
+                    <div class="col col-12 "><input type="number" name="months" max="12" min="1" placeholder="Number of Months" class="form-control" required></div>
+                </div>
+
+                <div class="row mt-5">
+                    <div class="col col-12 "><input type="number" name="realprice" min="0"  placeholder="Real Price" class="form-control" required></div>
+                </div>
+
+                <div class="row mt-5">
+                    <div class="col col-12 d-flex ">
+                        <input type="date" name="offertill" placeholder="Offer Ending" class="form-control w-50" required id="datePicker">
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var datePicker = document.getElementById('datePicker');
+    var today = new Date();
+    var tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+    var yyyy = tomorrow.getFullYear();
+    var mm = String(tomorrow.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+    var dd = String(tomorrow.getDate()).padStart(2, '0');
+    datePicker.min = `${yyyy}-${mm}-${dd}`;
+  });
+</script>
+
+                        <input type="time" name="offertil"  placeholder="Offer Ending" class="form-control w-50" required></div>
+                </div>
+
+                <div class="row mt-5">
+                    <div class="col col-12 "><input type="number" name="offerprice" min="0"  placeholder="Offer Price" class="form-control" required></div>
+                </div>
+
+                
+               
+                <div class="row mt-5">
+                    <div class="col col-12">
+                        <button class="btn btn-primary w-100">Add Package</button>
+                    </div>
+    
+                </div>
+    
+    
+            </form>
+            
+        </div>
+        
+    </div>
+</header>
+<section class="about-section text-center" id="about">
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-lg-8" style="margin-bottom: 200px;">
+                <h2 class="text-white mb-4">Premium Packages</h2>
+                {% for d in data %}
+            <div class="container container-fluid mb-5 text-center text-white">
+                <div class="row" style="background-color: rgba(168, 165, 165, 0.409);">
+                <div class="row mt-3 mb-3">
+                    <div class="col col-2 mt-3" >
+                        {{ d.months }} Months
+                    </div>
+                    <div class="col col-2" >
+                        <del>{{ d.real_price }}</del>
+                        {{ d.offer_price }} 
+                    </div>
+                    <div class="col col-5" >
+                    Started : {{ d.offer_started }} 
+                    Till : {{ d.offer_till }}
+                    </div>
+                    <div class="col col-3">
+                        <a href="/admin_premium_delete?pid={{ d.id }}" class="btn btn-dark">Delete</a>
+                    </div>
+                </div>
+                
+                </div>
+    
+            </div>
+            {% endfor %}
+            </div>
+        </div>
+ 
+        
+    </div>
+</section>
+
+
+{% endblock %}

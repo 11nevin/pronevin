@@ -1,0 +1,85 @@
+{% extends 'adminindex.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css">
+
+<header class="masthead">
+    <div class="container px-4 px-lg-5 d-flex h-100 align-items-center justify-content-center">
+        <div class="justify-content-center w-50">
+            <div class="container container-fluid mb-5 text-center">
+              
+    
+            </div>
+            <div class="container container-fluid"  style="background-color: rgba(143, 142, 142, 0.409);border-radius: 40px;padding-top: 20px;padding-bottom: 20px;" >
+                <div class="row text-center mb-4" >
+                    <div class="col col-6" >
+                        First Name 
+                    </div>
+                    <div class="col col-6">
+                        {{ data.firstname }}
+                    </div>
+                </div>
+                <div class="row text-center mb-4">
+                    <div class="col col-6" >
+                        Last Name 
+                    </div>
+                    <div class="col col-6">
+                        {{ data.lastname }}
+                    </div>
+                </div>
+                <div class="row text-center mb-4">
+                    <div class="col col-6" >
+                        Joined Date
+                    </div>
+                    <div class="col col-6">
+                        {{ data.loginid.date_joined }}
+                    </div>
+                </div>
+                <div class="row text-center mb-4">
+                    <div class="col col-6" >
+                        Qualification 
+                    </div>
+                    <div class="col col-6">
+                        {{ data.qualification }}
+                    </div>
+                </div>
+                <div class="row text-center mb-4">
+                    <div class="col col-6" >
+                        Purpose 
+                    </div>
+                    <div class="col col-6">
+                        {{ data.purpose }}
+                    </div>
+                </div>
+              
+                <div class="row text-center mb-4">
+                    <div class="col col-6" >
+                        Email 
+                    </div>
+                    <div class="col col-6">
+                        {{ data.email }}
+                    </div>
+                </div>
+                {% if data.loginid.is_active %}
+                <div class="row text-center mb-4">
+                    <div class="col col-12" >
+                    <a href="/admin_user_inactive?uid={{ data.loginid.id }}" class="btn btn-danger w-50"  >Make User Inactive</a>
+                    </div>
+                </div>
+                {% else %}
+                <div class="row text-center mb-4">
+                    <div class="col col-12" >
+                    <a href="/admin_user_active?uid={{ data.loginid.id }}" class="btn btn-primary w-50"  >Make User Active</a>
+                    </div>
+                </div>
+                {% endif %}
+                
+            </div>
+        </div>
+        
+    </div>
+</header>
+
+
+{% endblock %}

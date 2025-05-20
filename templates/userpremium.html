@@ -1,0 +1,36 @@
+{% extends 'userindex.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css">
+
+<header class="masthead">
+    <div class="container px-4 px-lg-5 d-flex h-100 align-items-center justify-content-center">
+        <div class="w-100 align-items-center">
+            <div class="container container-fluid mb-5 text-center ">
+                <h3 style="color: white;text-transform: uppercase;font-weight: bolder;">Video Summarization Premium</h3>
+    
+            </div>
+            <div class="container container-fluid d-flex justify-content-center align-items-center text-center w-100" style="height: 100vh;">
+                {% for d in data %}
+                <div class="rounded p-5 w-25" style="background-color: rgba(255, 255, 255, 0.52); border: 1px solid #ccc; margin-right: 50px;">
+                    <h4 class="mb-3" style="font-family: 'Arial', sans-serif; font-weight: bold;">Purchase the Premium</h4>
+                    <h5 style="font-family: 'Arial', sans-serif;">for</h5>
+                    <h2 class="mb-4 mt-4" style="font-family: 'Arial', sans-serif; font-weight: bold; font-size: 38px;">{{ d.months }} month</h2>
+                    <del style="font-family: 'Arial', sans-serif; font-weight: bold;">{{ d.real_price }}</del>
+                    <h3>{{ d.offer_price }}</h3>
+                    <ul class="text-dark mt-5 mb-5" style="text-align: left;">
+                        <li>Videos More Than 15 sec can be Uploaded</li>
+                    </ul>
+                    <h6 class="mb-3" style="font-family: 'Arial', sans-serif; font-weight: bold;">Offer Ends in {{ d.offer_till }}</h6>
+                    <a href="#" class="btn btn-dark mt-5" style="padding: 10px 20px; font-size: 16px;">Pay {{ d.offer_price }}</a>
+                </div>
+                {% endfor %}
+            </div>
+            
+        </div>
+        
+    </div>
+</header>
+
+{% endblock %}

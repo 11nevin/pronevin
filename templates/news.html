@@ -1,0 +1,258 @@
+{% extends 'userindex.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css">
+
+<header class="masthead">
+    <div class="container px-4 px-lg-5 d-flex h-100 align-items-center justify-content-center">
+        <div class="justify-content-center w-75">
+            <div class="container container-fluid mb-5 text-center">
+            </div>
+            <div class="w3l-contact-10" id="contact">
+                <div class="form-41-mian py-lg-5 py-md-4 py-2">
+                    <div class="container-fluid d-flex">
+                        <div class="mx-5 content" style="width: 100%;background-color: white;">
+                            {% if p %}
+                            <div class="idea container">
+                                <div class="useridea d-flex">
+                                    <div class="">
+                                        <em><small>{{p.publishedAt}}</small></em><br>
+                                        <em><small>Source: {{p.source.name}}</small></em>
+                                    </div>
+                                </div>
+                                <div class="ideaContent container text-center">
+                                    <h4>{{p.title}}:</h4>
+                                    <a href="{{p.urlToImage}}" target="_blank"><img src="{{p.urlToImage}}" style="margin: auto;width: 300px;" alt=""></a>
+                                    <h6>{{p.description}}</h6>
+                                    <p class="line-clamp">{{p.content}}</p>
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            <!-- Skip button form -->
+                             {%  if news.likes == "1"   %}
+                             <center><a class="btn btn-warning" href="/likes?title={{ p.title }}&timing={{ screen_time }}&genre={{ genre }}">Like
+
+                                <i class="bi bi-hand-thumbs-up-fill"></i>_{{ likes }}
+                             </a></center>
+                             {% else %}
+                             <center><a class="btn btn-warning" href="/likes?title={{ p.title }}&timing={{ screen_time }}&genre={{ genre }}">Like
+
+                                <i class="bi bi-hand-thumbs-up"></i>_{{ likes }}
+                             </a></center>
+                                {% endif %}
+                             <br>
+                            <form method="get" id="skip-form">
+                                {% csrf_token %}
+                                <input type="hidden" name="genre" value="{{ p.title }}">
+                                <input type="hidden" name="screen_time" value="{{ screen_time }}">
+
+                                <center><button type="submit" class="btn btn-primary">Skip</button></center>
+                            </form>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add this right before the closing </header> tag -->
+    <div id="voice-feedback" style="position: fixed; top: 80px; right: 20px; z-index: 1000; color: white; background-color: rgba(0,0,0,0.7); padding: 10px 20px; border-radius: 5px; display: none; min-width: 200px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+        <span id="feedback-text">Waiting for TTS to end...</span>
+    </div>
+</header>
+
+<!-- <section class="container-fluid w3l-inner-page-breadcrumb ses pt-5">
+	<form class="search position-relative" method="post" style="margin-left: 80%">
+		{% csrf_token %}
+		<input
+			type="search"
+			class="search__input"
+			name="search"
+			placeholder="Search here.."
+			required=""
+		/>
+		<span class="fa fa-search search__icon"></span>
+	</form>
+</section> -->
+
+<!-- Display the genre and screen time after clicking Skip -->
+
+    <div style="padding-top:150px ;padding-bottom: 100px;">
+        <center><h4>Summary</h4></center>
+        <br><br>
+        <center><h4>English</h4></center>
+        <center> <p class="w-50">{{ txt_summary }}</p></center>
+
+        <center> <audio controls autoplay><source src="../static/media/output.mp3" type="audio/mp3"><source src="../static/media/output.mp3" type="audio/ogg"></audio></center>
+        <br><br>
+        <center><h4>German</h4></center>
+        <center> <p class="w-50">{{ tger }}</p></center>
+        <center> <audio controls><source src="../static/media/output_de.mp3" type="audio/mp3"><source src="../static/media/output_de.mp3" type="audio/ogg"></audio></center>
+        <br><br>
+
+        <center><h4>French</h4></center>
+        <center> <p class="w-50">{{ tfr }}</p></center>
+        <center> <audio controls><source src="../static/media/output_fr.mp3" type="audio/mp3"><source src="../static/media/output_fr.mp3" type="audio/ogg"></audio></center>
+        <br><br>
+
+        <center><h4>Hindi</h4></center>
+        <center> <p class="w-50">{{ thi }}</p></center>
+        <center> <audio controls><source src="../static/media/output_hi.mp3" type="audio/mp3"><source src="../static/media/output_hi.mp3" type="audio/ogg"></audio></center>
+        <br><br>
+
+       
+    </div>
+
+
+<script>
+    let startTime = Date.now(); 
+    
+    // Add better initialization and error handling for speech recognition
+    let recognition = null;
+    try {
+        recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        console.log("Speech Recognition initialized successfully");
+    } catch (e) {
+        console.error("Speech Recognition failed to initialize:", e);
+    }
+
+    const voiceFeedback = document.getElementById('voice-feedback');
+    const feedbackText = document.getElementById('feedback-text');
+    const mainAudio = document.querySelector('audio[controls][autoplay]');
+    const likeButton = document.querySelector('a.btn-warning');
+    const skipButton = document.querySelector('#skip-form button');
+
+    // Function to speak feedback message
+    function speakFeedback() {
+        const feedbackMsg = "End of news. Say 'like' to show interest, or 'skip' to continue.";
+        const utterance = new SpeechSynthesisUtterance(feedbackMsg);
+        
+        // When feedback message finishes, start voice recognition
+        utterance.onend = function() {
+            try {
+                recognition.start();
+                feedbackText.textContent = 'Listening...';
+            } catch (e) {
+                console.error('Failed to start recognition after feedback:', e);
+            }
+        };
+        
+        window.speechSynthesis.speak(utterance);
+    }
+
+    if (recognition) {
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.lang = 'en-US';
+
+        recognition.onerror = (event) => {
+            console.error('Speech recognition error:', event.error);
+            feedbackText.textContent = `Error: ${event.error}`;
+            // Restart recognition even on error
+            setTimeout(() => {
+                try {
+                    recognition.start();
+                } catch (e) {
+                    console.error('Failed to restart recognition after error:', e);
+                }
+            }, 1000);
+        };
+
+        recognition.onstart = () => {
+            console.log('Recognition started');
+            feedbackText.textContent = 'Listening...';
+        };
+
+        recognition.onresult = (event) => {
+            const command = event.results[0][0].transcript.toLowerCase();
+            console.log('Command detected:', command);
+            
+            if (command.includes('like')) {
+                console.log('Executing like command');
+                feedbackText.textContent = `Command detected: ${command}`;
+                likeButton.click();
+                // Stop listening only on valid command
+                recognition.stop();
+                setTimeout(() => {
+                    voiceFeedback.style.display = 'none';
+                }, 2000);
+            } else if (command.includes('skip')) {
+                console.log('Executing skip command');
+                feedbackText.textContent = `Command detected: ${command}`;
+                skipButton.click();
+                // Stop listening only on valid command
+                recognition.stop();
+                setTimeout(() => {
+                    voiceFeedback.style.display = 'none';
+                }, 2000);
+            } else {
+                console.log('Invalid command:', command);
+                feedbackText.textContent = `Invalid command: "${command}". Please say "like" or "skip"`;
+                // Restart recognition for invalid command
+                setTimeout(() => {
+                    try {
+                        recognition.start();
+                    } catch (e) {
+                        console.error('Failed to restart recognition:', e);
+                    }
+                }, 1500);
+            }
+        };
+
+        recognition.onend = () => {
+            console.log('Recognition ended');
+            // Only restart if we haven't detected a valid command
+            if (feedbackText.textContent === 'Listening...') {
+                feedbackText.textContent = 'No command detected. Please try again.';
+                // Automatically restart recognition
+                setTimeout(() => {
+                    try {
+                        recognition.start();
+                    } catch (e) {
+                        console.error('Failed to restart recognition:', e);
+                    }
+                }, 1000);
+            }
+        };
+
+        // Modify the audio ended event listener
+        if (mainAudio) {
+            voiceFeedback.style.display = 'block';
+            
+            mainAudio.addEventListener('ended', () => {
+                console.log('Audio ended, speaking feedback');
+                speakFeedback(); // Speak feedback message first
+            });
+        }
+    }
+
+    // Existing screen time code...
+    function getScreenTime() {
+        return Math.floor((Date.now() - startTime) / 1000); 
+    }
+
+    // Existing skip form code...
+    document.getElementById('skip-form').addEventListener('submit', function(event) {
+        event.preventDefault();  // Prevent the form from submitting the usual way
+
+        // Get the real screen time
+        const screenTime = getScreenTime();
+
+        // Create a hidden input field to send the screen time to the server
+        let screenTimeInput = document.createElement('input');
+        screenTimeInput.type = 'hidden';
+        screenTimeInput.name = 'screen_time';
+        screenTimeInput.value = screenTime;
+
+        // Append the input to the form
+        this.appendChild(screenTimeInput);
+
+        // Submit the form with the real screen time
+        this.submit();
+    });
+</script>
+
+{% endblock %}

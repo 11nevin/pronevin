@@ -1,0 +1,78 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Voice Command Interface</title>
+</head>
+<body>
+    <h1>Voice Command Feature</h1>
+    <p>Use your voice to navigate the application.</p>
+    <button id="start-btn">Start Listening</button>
+    <p id="command-display">Your command: </p>
+    <p id="response-display"></p>
+
+    <script>
+        // Check for browser support
+        var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+            document.getElementById('response-display').innerText = "Your browser does not support Speech Recognition.";
+        } else {
+            var recognition = new SpeechRecognition();
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            recognition.lang = "en-US";
+
+            document.getElementById('start-btn').addEventListener('click', function(){
+                recognition.start();
+            });
+
+            recognition.onresult = function(event) {
+                var command = event.results[0][0].transcript;
+                document.getElementById('command-display').innerText = "Your command: " + command;
+                // Send the recognized command to the server for processing
+                fetch('/process_voice_command/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: 'command=' + encodeURIComponent(command)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.action === "redirect") {
+                        window.location.href = data.url;
+                    } else {
+                        document.getElementById('response-display').innerText = data.message;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('response-display').innerText = "Error processing command.";
+                });
+            };
+
+            recognition.onerror = function(event) {
+                document.getElementById('response-display').innerText = "Error: " + event.error;
+            };
+
+            // Helper function to retrieve CSRF token from cookies
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    let cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        let cookie = cookies[i].trim();
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+        }
+    </script>
+</body>
+</html>

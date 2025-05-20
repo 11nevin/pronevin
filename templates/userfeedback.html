@@ -1,0 +1,109 @@
+{% extends 'userindex.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css">
+
+<header class="masthead">
+    <div class="container px-4 px-lg-5 d-flex h-100 align-items-center justify-content-center">
+        <div class="justify-content-center w-50">
+            <div class="container container-fluid mb-5 text-center">
+                
+    
+            </div>
+            <form method="post" enctype="multipart/form-data" >
+                {% csrf_token %}
+                <div class="row mt-5">
+                    <div class="col col-12 text-center">
+                        <i class="bi bi-star" id="star_1" onclick="clickStar(1)" style="font-size: 35px;margin-right: 10px;color: goldenrod;"></i>
+                        <i class="bi bi-star" id="star_2" onclick="clickStar(2)" style="font-size: 35px;margin-right: 10px;color: goldenrod;"></i>
+                        <i class="bi bi-star" id="star_3" onclick="clickStar(3)" style="font-size: 35px;margin-right: 10px;color: goldenrod;"></i>
+                        <i class="bi bi-star" id="star_4" onclick="clickStar(4)" style="font-size: 35px;margin-right: 10px;color: goldenrod;"></i>
+                        <i class="bi bi-star" id="star_5" onclick="clickStar(5)" style="font-size: 35px;margin-right: 10px;color: goldenrod;"></i>
+                    </div>
+                    <div class="mt-5" style="height: 25px;">
+                        <center><img src="" id="imgicon" style="width: 50px;display: block;" alt="">
+                        <!-- <img src="{% static 'assets/img/sad.png' %}" id="img2" style="width: 50px;display: none;" alt="">
+                        <img src="{% static 'assets/img/smiling-face.png' %}" id="img3" style="width: 50px;display: none;" alt="">
+                        <img src="{% static 'assets/img/happy.png' %}" id="img4" style="width: 50px;display: none;" alt="">
+                        <img src="{% static 'assets/img/love.png' %}" id="img5" style="width: 50px;display: none;" alt=""></center> -->
+                    </div>
+                </div>
+                <script>
+                    function clickStar(starIndex) { 
+                        document.getElementById('star_rating').value=starIndex;
+                        for (let i = 1; i <= 5; i++) 
+                        { 
+                            let star = document.getElementById('star_' + i); 
+                            if (i <= starIndex) { 
+                                star.className = 'bi bi-star-fill'; 
+                            } 
+                            else { 
+                                star.className = 'bi bi-star'; 
+                            } 
+                        } 
+                        if (starIndex == 1){
+                            let emoji = document.getElementById('imgicon').src="{% static 'assets/img/angry.png' %}";
+                        }
+                        else if (starIndex == 2){
+                            let emoji = document.getElementById('imgicon').src="{% static 'assets/img/sad.png' %}";
+                        }
+                        else if (starIndex == 3){
+                            let emoji = document.getElementById('imgicon').src="{% static 'assets/img/smiling-face.png' %}";
+                        }
+                        else if (starIndex == 4){
+                            let emoji = document.getElementById('imgicon').src="{% static 'assets/img/happy.png' %}";
+                        }
+                        else if (starIndex == 5){
+                            let emoji = document.getElementById('imgicon').src="{% static 'assets/img/love.png' %}";
+                        }
+                    }
+                </script>
+                <input type="hidden" id="star_rating" name="star_rating" >
+                <div class="row mt-5">
+                    <div class="col col-12 "><textarea name="inputtext" style="height: 250px;" placeholder="Give Feedbacks to improve performence" class="form-control" required></textarea></div>
+                </div>
+
+               
+                <div class="row mt-5">
+                    <div class="col col-12">
+                        <button class="btn btn-primary w-100" >Add Feedback <i class="bi bi-stars"></i></button>
+                    </div>
+    
+                </div>
+    
+    
+            </form>
+        </div>
+        
+    </div>
+</header>
+<section class="about-section text-center" id="about">
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-lg-8" style="margin-bottom: 200px;">
+                <h2 class="text-white mb-4">Previous Feedbacks</h2>
+                <table class="table table-dark">
+                    <tr>
+                        <th>Date & Time</th>
+                        <th>Rating</th>
+                        <th>Feedback</th>
+                        <th>Replies</th>
+                    </tr>
+                    {% for f in feeds %}
+                    <tr>
+                        <td>{{ f.date_time }}</td>
+                        <td>{{ f.rating }} <i class="bi bi-star-fill"></i></td>
+                        <td>{{ f.feedback }}</td>
+                        <td>{{ f.reply }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+ 
+        
+    </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends 'userindex.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css">
+
+<header class="masthead">
+    <div class="container px-4 px-lg-5 h-100 align-items-center justify-content-center">
+        <div style="height: 200px;">
+
+        </div>
+        <div class="container container-fluid mb-5 text-center" >
+            <h3 style="color: white;text-transform: uppercase;font-weight: bolder;">History</h3>
+
+        </div>
+        <div id="vidhistory" class="justify-content-center w-100 h-50" style="overflow: auto;" >
+            <style>
+             #vidhistory::-webkit-scrollbar { display: none; }
+            </style>
+            <center><table  class="table table-primary w-75" style="font-size: 12px;" >
+                <tr style="position: sticky;width: 100%;">
+                    <th>SI</th>
+                    <th>Date</th>
+                    <th>Content</th>
+                    <th>Summary</th>
+                </tr>
+                {% for d in data %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td style="width: 200px;">{{ d.date_time }}</td>
+                    <td><audio height="150px" controls>
+                        <source src="{{ d.video }}" type="video/mp3" >
+                        <source src="{{ d.video }}" type="video/ogg" >
+                    </audio></td>
+                    <td>{{ d.summary }}</td>
+                </tr>
+                {% endfor %}
+                {% for d2 in data2 %}
+                <tr>
+                    <td>{{ forloop.counter|add:count }}</td>
+                    <td style="width: 200px;">{{ d2.date_time }}</td>
+                    <td>{{ d2.text_input }}></td>
+                    <td>{{ d2.summary }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            </table></center>
+        </div>
+        
+    </div>
+    <div style="height: 200px;">
+
+    </div>
+</header>
+
+
+{% endblock %}

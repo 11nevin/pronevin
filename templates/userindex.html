@@ -1,0 +1,225 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>News Summarizer</title>
+        <link rel="icon" type="image/x-icon" href="{% static 'assets/favicon.ico' %}" />
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+    </head>
+    <body id="page-top">
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+            <div class="container px-4 px-lg-5">
+                <a class="navbar-brand" href="#page-top">News Summarizer</a>
+                <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    Menu <i class="fas fa-bars"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item"><a class="nav-link" href="/userhome">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/user_profile">Profile</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/news">News</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/user_feedback">Feedback</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/login">Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        {% block content %}
+        <!-- Masthead-->
+        <header class="masthead">
+            <div class="container px-4 px-lg-5 d-flex h-100 align-items-center justify-content-center">
+                <div class="d-flex justify-content-center">
+                    <div class="text-center">
+                        <h1 class="mx-auto my-0 text-uppercase">Summarize</h1>
+                        <h2 class="text-white-50 mx-auto mt-2 mb-5">
+                            Personalized News Summaries with AI: Read Less, Know More, Effortlessly.
+                        </h2>
+                        <!-- Hidden elements for voice command feedback -->
+                        <p id="voice-status" style="color: white;"></p>
+                        <p id="voice-result" style="color: white;"></p>
+                    </div>
+                </div>
+            </div>
+        </header>
+        {% endblock %}
+        {% if msg %}
+        <script>
+            alert('{{ msg }}');
+        </script>
+        {% endif %}
+        <section class="contact-section bg-black">
+            <div class="container px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5">
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        <div class="card py-4 h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-map-marked-alt text-primary mb-2"></i>
+                                <h4 class="text-uppercase m-0">Address</h4>
+                                <hr class="my-4 mx-auto" />
+                                <div class="small text-black-50">RSET</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        <div class="card py-4 h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-envelope text-primary mb-2"></i>
+                                <h4 class="text-uppercase m-0">Email</h4>
+                                <hr class="my-4 mx-auto" />
+                                <div class="small text-black-50"><a href="#!">group15@gmail.com</a></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        <div class="card py-4 h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-mobile-alt text-primary mb-2"></i>
+                                <h4 class="text-uppercase m-0">Phone</h4>
+                                <hr class="my-4 mx-auto" />
+                                <div class="small text-black-50">+91 9633443156</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="social d-flex justify-content-center">
+                    <a class="mx-2" href="#!"><i class="fab fa-twitter"></i></a>
+                    <a class="mx-2" href="#!"><i class="fab fa-facebook-f"></i></a>
+                    <a class="mx-2" href="#!"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+        </section>
+        <footer class="footer bg-black small text-center text-white-50">
+            <div class="container px-4 px-lg-5">Copyright &copy; group 15 2025</div>
+        </footer>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="{% static 'js/scripts.js' %}"></script>
+        <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+        <!-- NEW: Voice Command Auto-Trigger Script -->
+        <script>
+            var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            
+            // Function to speak welcome message
+            function speakWelcome() {
+                const welcomeMsg = "Welcome to personalized news summarizer. Please say read news after this message to get your news";
+                const utterance = new SpeechSynthesisUtterance(welcomeMsg);
+                
+                // When welcome message finishes, start listening
+                utterance.onend = function() {
+                    startVoiceRecognition();
+                };
+                
+                window.speechSynthesis.speak(utterance);
+            }
+
+            // Function to handle voice recognition
+            function startVoiceRecognition() {
+                if (!SpeechRecognition) {
+                    document.getElementById('voice-status').innerText = "Your browser does not support Speech Recognition.";
+                    return;
+                }
+
+                var recognition = new SpeechRecognition();
+                recognition.continuous = true;
+                recognition.interimResults = false;
+                recognition.lang = "en-US";
+
+                try {
+                    recognition.start();
+                    document.getElementById('voice-status').innerText = "Listening for voice commands...";
+                } catch (err) {
+                    document.getElementById('voice-status').innerText = "Error starting voice recognition.";
+                }
+
+                recognition.onresult = function(event) {
+                    var command = event.results[event.results.length - 1][0].transcript.toLowerCase();
+                    document.getElementById('voice-result').innerText = "You said: " + command;
+
+                    // Send the command to the server for processing
+                    fetch('/process_voice_command/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'X-CSRFToken': getCookie('csrftoken')
+                        },
+                        body: 'command=' + encodeURIComponent(command)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.action === "redirect") {
+                            window.location.href = data.url;
+                        } else {
+                            document.getElementById('voice-status').innerText = data.message;
+                        }
+                    })
+                    .catch(error => {
+                        document.getElementById('voice-status').innerText = "Error processing command.";
+                    });
+                };
+
+                recognition.onend = function() {
+                    // Restart recognition when it ends to keep listening continuously
+                    recognition.start();
+                };
+
+                recognition.onerror = function(event) {
+                    document.getElementById('voice-status').innerText = "Recognition error: " + event.error;
+                    // Attempt to restart on error after a short delay
+                    setTimeout(() => {
+                        try {
+                            recognition.start();
+                        } catch (err) {
+                            console.error("Failed to restart recognition:", err);
+                        }
+                    }, 1000);
+                };
+            }
+
+            // Helper function to retrieve CSRF token
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    let cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        let cookie = cookies[i].trim();
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+
+            // Helper function to check if we're on the home page
+            function isHomePage() {
+                // Check if the current URL path ends with 'userhome' or is the root
+                return window.location.pathname.endsWith('userhome') || window.location.pathname === '/';
+            }
+
+            // Start the process when page loads, but only on home page
+            window.addEventListener('load', function() {
+                if (isHomePage()) {
+                    speakWelcome();
+                } else {
+                    // On other pages, just start voice recognition without welcome message
+                    startVoiceRecognition();
+                }
+            });
+        </script>
+    </body>
+</html>

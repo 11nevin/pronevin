@@ -1,0 +1,41 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block content %}
+<header class="masthead">
+    <div class="container px-4 px-lg-5 d-flex h-100 align-items-center justify-content-center">
+        <div class="justify-content-center w-50">
+            <div class="container container-fluid mb-5 text-center">
+                <h3 style="color: white;text-transform: uppercase;font-weight: bolder;">Login</h3>
+    
+            </div>
+            <form method="post" >
+                {% csrf_token %}
+                
+                <div class="row mt-5">
+                    <div class="col col-12 "><input type="email" name="email" pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$" placeholder="Email" class="form-control " required></div>
+                </div>
+
+                <div class="row mt-5">
+
+                    <div class="col col-12">
+                        <input type="password" class="form-control" name="password" placeholder="Password"  required>
+                    </div>
+                </div>
+               
+                <div class="row mt-5">
+                    <div class="col col-12">
+                        <button class="btn btn-primary w-100">Login</button>
+                    </div>
+    
+                </div>
+    
+    
+            </form>
+        </div>
+        
+    </div>
+</header>
+
+
+{% endblock %}
