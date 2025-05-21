@@ -25,8 +25,8 @@ SECRET_KEY = 'django-insecure-5&t3st@u1#j16%zbchc2s(lbsor)kn^pj9)^h0791osnc&r6#)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = ['pronevin1.onrender.com']
+PORT = os.getenv('PORT', '8000')
+ALLOWED_HOSTS = ['pronevin-1.onrender.com']
 
 
 # Application definition
